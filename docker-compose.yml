@@ -1,0 +1,36 @@
+version: '3'
+services:
+
+  # API
+  service_nest_app:
+    build: .
+    image: vdenis0v/nestjs_handy_notes
+    container_name: container_nest_app
+    ports:
+     - 3000:3000
+    depends_on:
+      - service_postgre_db
+    environment:
+      - DATABASE_HOST=service_postgre_db
+
+  # Postgre SQL
+  service_postgre_db:
+    image: postgres
+    container_name: container_postgre_db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: my-storage
+
+  # DB dashboard
+  service_postgre_admin:
+    image: adminer
+    container_name: container_postgre_admin
+    restart: always
+    depends_on:
+      - service_postgre_db
+    ports:
+      - 8080:8080
