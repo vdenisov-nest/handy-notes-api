@@ -4,14 +4,14 @@ import {
   Body, Param,
 } from '@nestjs/common';
 
-import { UserService } from './user.service';
-import { CreateUserDTO, UpdateUserDTO } from './user.dto';
+import { NoteService } from './note.service';
+import { CreateNoteDTO, UpdateNoteDTO } from './note.dto';
 
-@Controller('users')
-export class UserController {
-  private logger = new Logger('UserController');
+@Controller('notes')
+export class NoteController {
+  private logger = new Logger('NoteController');
 
-  constructor(private userService: UserService) {}
+  constructor(private noteService: NoteService) {}
 
   private _logData(options: any) {
     // tslint:disable:no-unused-expression
@@ -24,47 +24,48 @@ export class UserController {
   // ==================================================
 
   @Post()
-  createNewUser(
-    @Body() data: CreateUserDTO,
+  createNewNote(
+    @Body() data: CreateNoteDTO,
   ) {
     this._logData({ data });
-    return this.userService.createNew(data);
+    return this.noteService.createNew(data);
   }
 
   // ==================================================
 
   @Get()
-  showAllUsers() {
-    return this.userService.showAll();
+  showAllNotes() {
+    return this.noteService.showAll();
   }
 
   // ==================================================
 
   @Get(':id')
-  findOneUser(
+  findOneNote(
     @Param('id') id: number,
   ) {
-    return this.userService.findOne(id);
+    this._logData({ id });
+    return this.noteService.findOne(id);
   }
 
   // ==================================================
 
   @Put(':id')
-  updateOneUser(
+  updateOneNote(
     @Param('id') id: number,
-    @Body() data: UpdateUserDTO,
+    @Body() data: UpdateNoteDTO,
   ) {
     this._logData({ id, data });
-    return this.userService.updateOne(id, data);
+    return this.noteService.updateOne(id, data);
   }
 
   // ==================================================
 
   @Delete(':id')
-  deleteOneUser(
+  deleteOneNote(
     @Param('id') id: number,
   ) {
     this._logData({ id });
-    return this.userService.deleteOne(id);
+    return this.noteService.deleteOne(id);
   }
 }
