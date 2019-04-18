@@ -1,0 +1,10 @@
+version: '3'
+services:
+
+  # API
+  service_nest_app:
+    build: .
+    image: vdenis0v/nestjs_handy_notes
+    container_name: container_nest_app
+    ports:
+     - 3000:3000
