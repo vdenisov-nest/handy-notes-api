@@ -2,8 +2,9 @@ import * as config from 'config';
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { UserModule } from './modules/user/user.module';
 
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -19,6 +20,7 @@ console.log('\n', '=> DB URI =>', dbURI, '\n');
 @Module({
   imports: [
     TypeOrmModule.forRoot({ ...DB_PARAMS }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
