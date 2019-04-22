@@ -1,7 +1,7 @@
 import {
   Controller, Logger,
   Post, Get, Put, Delete,
-  Body, Param,
+  Body, Param, Query, BadRequestException,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -65,10 +65,17 @@ export class UserController {
   // Notes
 
   @Get(':id/notes')
-  showNotesForUsers(
+  showPersonalNotesForUsers(
     @Param('id') id: number,
+    @Query('type') type: string,
   ) {
-    return this.userService.showNotes(id);
+    if (type === 'personal' || type === undefined) {
+      return this.userService.showPersonalNotes(id);
+    } else if (type === 'favorite') {
+      return this.userService.showFavoriteNotes(id);
+    } else {
+      throw new BadRequestException('Invalid type of notes');
+    }
   }
 
 }

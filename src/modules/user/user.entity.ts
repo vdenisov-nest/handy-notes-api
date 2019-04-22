@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
 import { NoteEntity } from '../note/note.entity';
 
 @Entity('user')
@@ -26,7 +26,10 @@ export class UserEntity {
   // } PROFILE info
 
   // relationships {
-  @OneToMany(type => NoteEntity, note => note.author)
-  notes: NoteEntity[];
+  @OneToMany(type => NoteEntity, personalNotes => personalNotes.author)
+  personalNotes: NoteEntity[];
+
+  @ManyToMany(type => NoteEntity, favoriteNotes => favoriteNotes.likes)
+  favoriteNotes: NoteEntity[];
   // } relationships
 }

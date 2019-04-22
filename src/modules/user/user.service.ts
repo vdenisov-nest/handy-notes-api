@@ -45,7 +45,7 @@ export class UserService {
 
   async showAll(): Promise<any[]> {
     const userList = await this.userRepository.find({
-      relations: ['notes'],
+      relations: ['personalNotes'],
     });
 
     return userList;
@@ -57,7 +57,7 @@ export class UserService {
 
     const userObj = await this.userRepository.findOne({
       where: {id},
-      relations: ['notes'],
+      relations: ['personalNotes'],
     });
 
     return userObj;
@@ -70,7 +70,7 @@ export class UserService {
     await this.userRepository.update({id}, data);
     const userObj = await this.userRepository.findOne({
       where: {id},
-      relations: ['notes'],
+      relations: ['personalNotes'],
     });
 
     return userObj;
@@ -82,7 +82,7 @@ export class UserService {
 
     const userObj = await this.userRepository.findOne({
       where: {id},
-      relations: ['notes'],
+      relations: ['personalNotes'],
     });
     await this.userRepository.delete({ id });
 
@@ -92,16 +92,28 @@ export class UserService {
   // ==================================================
   // Notes
 
-  async showNotes(id: number): Promise<any> {
+  async showPersonalNotes(id: number): Promise<any> {
     // validation
     await this._verifyUserId(id);
 
     const userObj = await this.userRepository.findOne({
       where: {id},
-      relations: ['notes'],
+      relations: ['personalNotes'],
     });
 
-    return userObj.notes;
+    return userObj.personalNotes;
+  }
+
+  async showFavoriteNotes(id: number): Promise<any> {
+    // validation
+    await this._verifyUserId(id);
+
+    const userObj = await this.userRepository.findOne({
+      where: {id},
+      relations: ['favoriteNotes'],
+    });
+
+    return userObj.favoriteNotes;
   }
 
   // ==================================================

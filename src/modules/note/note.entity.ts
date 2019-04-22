@@ -14,10 +14,15 @@ export class NoteEntity {
   text: string;
 
   // relationships {
-  @ManyToOne(type => UserEntity, author => author.notes)
+  @ManyToOne(type => UserEntity, author => author.personalNotes)
   author: UserEntity;
 
   @ManyToMany(type => TagEntity, tags => tags.notes)
+  @JoinTable({ name: 'notes-tags' })
   tags: TagEntity[];
+
+  @ManyToMany(type => UserEntity, likes => likes.favoriteNotes)
+  @JoinTable({ name: 'notes-likes' })
+  likes: UserEntity[];
   // } relationships
 }

@@ -11,9 +11,6 @@ export class TagEntity {
 
   // relationships {
   @ManyToMany(type => NoteEntity, notes => notes.tags)
-  @JoinTable({
-    name: 'notes-tags',
-  })
   notes: NoteEntity[];
   // } relationships
 }

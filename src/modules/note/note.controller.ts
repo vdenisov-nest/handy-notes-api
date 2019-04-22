@@ -95,5 +95,37 @@ export class NoteController {
   }
 
   // ==================================================
+  // Likes
+
+  @Post(':id/likes')
+  addLikeToNote(
+    @Param('id') id: string,
+    @Body('userId') userId: number,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.addLike(noteId, userId);
+  }
+
+  @Get(':id/likes')
+  showLikesForNote(
+    @Param('id') id: string,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.showLikes(noteId);
+  }
+
+  @Delete(':id/likes')
+  removeLikeFromNote(
+    @Param('id') id: string,
+    @Body('userId') userId: number,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.removeLike(noteId, userId);
+  }
+
+  // ==================================================
 
 }

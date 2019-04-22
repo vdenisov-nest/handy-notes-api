@@ -71,7 +71,7 @@ export class NoteService {
 
   async showAll(): Promise<any[]> {
     const noteList = this.noteRepository.find({
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
 
     return noteList;
@@ -83,7 +83,7 @@ export class NoteService {
 
     const noteObj = this.noteRepository.findOne({
       where: {id},
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
 
     return noteObj;
@@ -96,7 +96,7 @@ export class NoteService {
     await this.noteRepository.update({id}, data);
     const noteObj = await this.noteRepository.findOne({
       where: {id},
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
 
     return noteObj;
@@ -108,7 +108,7 @@ export class NoteService {
 
     const noteObj = await this.noteRepository.findOne({
       where: {id},
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
     await this.noteRepository.delete({ id });
 
@@ -126,7 +126,7 @@ export class NoteService {
 
     const noteObj = await this.noteRepository.findOne({
       where: {id: noteId},
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
     const tagObj = await this.tagRepository.findOne({
       where: {id: tagId},
@@ -167,7 +167,7 @@ export class NoteService {
 
     const noteObj = await this.noteRepository.findOne({
       where: {id: noteId},
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'likes'],
     });
 
     // validation {
@@ -181,6 +181,73 @@ export class NoteService {
     await this.noteRepository.save(noteObj);
 
     return noteObj;
+  }
+
+  // ==================================================
+  // Likes
+
+  async addLike(noteId: number, userId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    await this._verifyUserId(userId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['author', 'tags', 'likes'],
+    });
+    const userObj = await this.userRepository.findOne({
+      where: {id: userId},
+    });
+
+    // validation {
+    const sameLikes = noteObj.likes.filter(user => user.id === userId);
+    if (sameLikes.length > 0) {
+      throw new BadRequestException('This user has already added like to this note');
+    }
+    // } validation
+
+    noteObj.likes.push(userObj);
+    await this.noteRepository.save(noteObj);
+
+    return this._toResponseObject(noteObj);
+  }
+
+  async showLikes(noteId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['likes'],
+    });
+
+    return noteObj.likes;
+  }
+
+  async removeLike(noteId: number, userId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    await this._verifyUserId(userId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['author', 'tags', 'likes'],
+    });
+
+    // validation {
+    const sameLikes = noteObj.likes.filter(user => user.id === userId);
+    if (sameLikes.length === 0) {
+      throw new BadRequestException('This user has already removed like from this note');
+    }
+    // } validation
+
+    noteObj.likes = noteObj.likes.filter(user => user.id !== userId);
+    await this.noteRepository.save(noteObj);
+
+    return this._toResponseObject(noteObj);
   }
 
   // ==================================================
