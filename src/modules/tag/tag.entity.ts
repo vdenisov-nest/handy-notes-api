@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from 'typeorm';
+import { NoteEntity } from '../note/note.entity';
 
 @Entity('tag')
 export class TagEntity {
@@ -7,4 +8,12 @@ export class TagEntity {
 
   @Column('text')
   value: string;
+
+  // relationships {
+  @ManyToMany(type => NoteEntity, notes => notes.tags)
+  @JoinTable({
+    name: 'notes-tags',
+  })
+  notes: NoteEntity[];
+  // } relationships
 }

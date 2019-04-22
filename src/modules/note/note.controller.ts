@@ -63,5 +63,37 @@ export class NoteController {
   }
 
   // ==================================================
+  // Tags
+
+  @Post(':id/tags')
+  attachTagToNote(
+    @Param('id') id: string,
+    @Body('tagId') tagId: number,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.attachTag(noteId, tagId);
+  }
+
+  @Get(':id/tags')
+  showTagsForNote(
+    @Param('id') id: string,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.showTags(noteId);
+  }
+
+  @Delete(':id/tags')
+  detachTagFromNote(
+    @Param('id') id: string,
+    @Body('tagId') tagId: number,
+  ) {
+    this._logData({ id });
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.detachTag(noteId, tagId);
+  }
+
+  // ==================================================
 
 }

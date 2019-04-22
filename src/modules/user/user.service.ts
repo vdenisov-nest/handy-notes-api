@@ -2,8 +2,9 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { UserEntity } from './user.entity';
 import { CreateUserDTO, UpdateUserDTO } from './user.dto';
+
+import { UserEntity } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -12,7 +13,7 @@ export class UserService {
     private userRepository: Repository<UserEntity>,
   ) {}
 
-  private async _getByIdOrFail(id: number) {
+  private async _verifyUserId(id: number) {
     const userObj = await this.userRepository.findOne({ where: {id} });
     if (!userObj) {
       throw new NotFoundException(`Not found record with (id='${id}')`);
@@ -20,7 +21,7 @@ export class UserService {
     return userObj;
   }
 
-  private async _getByEmailOrFail(email: string) {
+  private async _verifyUserEmail(email: string) {
     const userObj = await this.userRepository.findOne({ where: {email} });
     if (userObj) {
       throw new BadRequestException('User already exists !');
@@ -33,35 +34,56 @@ export class UserService {
 
   async createNew(data: CreateUserDTO): Promise<any> {
     const { email, password } = data;
-    let userObj = await this._getByEmailOrFail(email);
-    userObj = await this.userRepository.create(data);
+    // validation
+    await this._verifyUserEmail(email);
+
+    const userObj = await this.userRepository.create(data);
     await this.userRepository.save(userObj);
 
     return userObj;
   }
 
   async showAll(): Promise<any[]> {
-    const userList = await this.userRepository.find();
+    const userList = await this.userRepository.find({
+      relations: ['notes'],
+    });
 
     return userList;
   }
 
   async findOne(id: number): Promise<any> {
-    const userObj = await this._getByIdOrFail(id);
+    // validation
+    await this._verifyUserId(id);
+
+    const userObj = await this.userRepository.findOne({
+      where: {id},
+      relations: ['notes'],
+    });
 
     return userObj;
   }
 
   async updateOne(id: number, data: UpdateUserDTO): Promise<any> {
-    let userObj = await this._getByIdOrFail(id);
+    // validation
+    await this._verifyUserId(id);
+
     await this.userRepository.update({id}, data);
-    userObj = await this._getByIdOrFail(id);
+    const userObj = await this.userRepository.findOne({
+      where: {id},
+      relations: ['notes'],
+    });
 
     return userObj;
   }
 
   async deleteOne(id: number): Promise<any> {
-    const userObj = await this._getByIdOrFail(id);
+    // validation
+    await this._verifyUserId(id);
+
+    const userObj = await this.userRepository.findOne({
+      where: {id},
+      relations: ['notes'],
+    });
     await this.userRepository.delete({ id });
 
     return userObj;
@@ -71,9 +93,10 @@ export class UserService {
   // Notes
 
   async showNotes(id: number): Promise<any> {
-    let userObj = await this._getByIdOrFail(id);
+    // validation
+    await this._verifyUserId(id);
 
-    userObj = await this.userRepository.findOne({
+    const userObj = await this.userRepository.findOne({
       where: {id},
       relations: ['notes'],
     });
@@ -81,5 +104,6 @@ export class UserService {
     return userObj.notes;
   }
 
+  // ==================================================
 
 }

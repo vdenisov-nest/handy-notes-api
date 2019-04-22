@@ -1,10 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { CreateNoteDTO, UpdateNoteDTO } from './note.dto';
+
 import { UserEntity } from '../user/user.entity';
 import { NoteEntity } from './note.entity';
-import { CreateNoteDTO, UpdateNoteDTO } from './note.dto';
+import { TagEntity } from '../tag/tag.entity';
 
 @Injectable()
 export class NoteService {
@@ -14,27 +16,40 @@ export class NoteService {
 
     @InjectRepository(NoteEntity)
     private noteRepository: Repository<NoteEntity>,
+
+    @InjectRepository(TagEntity)
+    private tagRepository: Repository<TagEntity>,
   ) {}
 
-  private async _getByIdOrFail(id: number) {
-    const noteObj = await this.noteRepository.findOne({
-      where: {id},
-      relations: ['author'],
-    });
+  private async _verifyUserId(id: number) {
+    const userObj = await this.userRepository.findOne({ where: {id} });
+    if (!userObj) {
+      throw new NotFoundException(`Not found record with (id='${id}')`);
+    }
+    return userObj;
+  }
+
+  private async _checkNoteId(id: number) {
+    const noteObj = await this.noteRepository.findOne({ where: {id} });
     if (!noteObj) {
       throw new NotFoundException(`Not found record with (id='${id}')`);
     }
     return noteObj;
   }
 
-  private async _verifyUserId(id: number) {
-    const userObj = await this.userRepository.findOne({
-      where: {id},
-    });
-    if (!userObj) {
+  private async _checkTagId(id: number) {
+    const tagObj = await this.tagRepository.findOne({ where: {id} });
+    if (!tagObj) {
       throw new NotFoundException(`Not found record with (id='${id}')`);
     }
-    return userObj;
+    return tagObj;
+  }
+
+  private _toResponseObject(noteObj: NoteEntity) {
+    return {
+      ...noteObj,
+      tags: noteObj.tags.map(tag => { delete tag.notes; return tag; }),
+    };
   }
 
   // ==================================================
@@ -56,29 +71,114 @@ export class NoteService {
 
   async showAll(): Promise<any[]> {
     const noteList = this.noteRepository.find({
-      relations: ['author'],
+      relations: ['author', 'tags'],
     });
 
     return noteList;
   }
 
   async findOne(id: number): Promise<any> {
-    const noteObj = await this._getByIdOrFail(id);
+    // validation
+    await this._checkNoteId(id);
+
+    const noteObj = this.noteRepository.findOne({
+      where: {id},
+      relations: ['author', 'tags'],
+    });
 
     return noteObj;
   }
 
   async updateOne(id: number, data: UpdateNoteDTO): Promise<any> {
-    let noteObj = await this._getByIdOrFail(id);
+    // validation
+    await this._checkNoteId(id);
+
     await this.noteRepository.update({id}, data);
-    noteObj = await this._getByIdOrFail(id);
+    const noteObj = await this.noteRepository.findOne({
+      where: {id},
+      relations: ['author', 'tags'],
+    });
 
     return noteObj;
   }
 
   async deleteOne(id: number): Promise<any> {
-    const noteObj = await this._getByIdOrFail(id);
+    // validation
+    await this._checkNoteId(id);
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id},
+      relations: ['author', 'tags'],
+    });
     await this.noteRepository.delete({ id });
+
+    return noteObj;
+  }
+
+  // ==================================================
+  // Tags
+
+  async attachTag(noteId: number, tagId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    await this._checkTagId(tagId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['author', 'tags'],
+    });
+    const tagObj = await this.tagRepository.findOne({
+      where: {id: tagId},
+      relations: ['notes'],
+    });
+
+    // validation {
+    const sameTags = noteObj.tags.filter(tag => tag.id === tagId);
+    if (sameTags.length > 0) {
+      throw new BadRequestException('This tag already attached');
+    }
+    // } validation
+
+    noteObj.tags.push(tagObj);
+    await this.noteRepository.save(noteObj);
+
+    return this._toResponseObject(noteObj);
+  }
+
+  async showTags(noteId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['tags'],
+    });
+
+    return noteObj.tags;
+  }
+
+  async detachTag(noteId: number, tagId: number): Promise<any> {
+    // validation {
+    await this._checkNoteId(noteId);
+    await this._checkTagId(tagId);
+    // } validation
+
+    const noteObj = await this.noteRepository.findOne({
+      where: {id: noteId},
+      relations: ['author', 'tags'],
+    });
+
+    // validation {
+    const sameTags = noteObj.tags.filter(tag => tag.id === tagId);
+    if (sameTags.length === 0) {
+      throw new BadRequestException('Note hasn`t this tag');
+    }
+    // } validation
+
+    noteObj.tags = noteObj.tags.filter(tag => tag.id !== tagId);
+    await this.noteRepository.save(noteObj);
 
     return noteObj;
   }
