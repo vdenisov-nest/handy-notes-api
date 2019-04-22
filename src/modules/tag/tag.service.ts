@@ -21,6 +21,7 @@ export class TagService {
   }
 
   // ==================================================
+  // CRUD
 
   async createNew(data: CreateTagDTO): Promise<any> {
     const tagObj = await this.tagRepository.create(data);
@@ -29,23 +30,17 @@ export class TagService {
     return tagObj;
   }
 
-  // ==================================================
-
   async showAll(): Promise<any[]> {
     const tagList = this.tagRepository.find();
 
     return tagList;
   }
 
-  // ==================================================
-
   async findOne(id: number): Promise<any> {
     const tagObj = await this._getByIdOrFail(id);
 
     return tagObj;
   }
-
-  // ==================================================
 
   async updateOne(id: number, data: UpdateTagDTO): Promise<any> {
     let tagObj = await this._getByIdOrFail(id);
@@ -55,12 +50,13 @@ export class TagService {
     return tagObj;
   }
 
-  // ==================================================
-
   async deleteOne(id: number): Promise<any> {
     const tagObj = await this._getByIdOrFail(id);
     await this.tagRepository.delete({ id });
 
     return tagObj;
   }
+
+  // ==================================================
+
 }

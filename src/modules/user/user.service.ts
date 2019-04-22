@@ -22,13 +22,14 @@ export class UserService {
 
   private async _getByEmailOrFail(email: string) {
     const userObj = await this.userRepository.findOne({ where: {email} });
-    if (!userObj) {
+    if (userObj) {
       throw new BadRequestException('User already exists !');
     }
     return userObj;
   }
 
   // ==================================================
+  // CRUD
 
   async createNew(data: CreateUserDTO): Promise<any> {
     const { email, password } = data;
@@ -39,23 +40,17 @@ export class UserService {
     return userObj;
   }
 
-  // ==================================================
-
   async showAll(): Promise<any[]> {
     const userList = await this.userRepository.find();
 
     return userList;
   }
 
-  // ==================================================
-
   async findOne(id: number): Promise<any> {
     const userObj = await this._getByIdOrFail(id);
 
     return userObj;
   }
-
-  // ==================================================
 
   async updateOne(id: number, data: UpdateUserDTO): Promise<any> {
     let userObj = await this._getByIdOrFail(id);
@@ -65,12 +60,26 @@ export class UserService {
     return userObj;
   }
 
-  // ==================================================
-
   async deleteOne(id: number): Promise<any> {
     const userObj = await this._getByIdOrFail(id);
     await this.userRepository.delete({ id });
 
     return userObj;
   }
+
+  // ==================================================
+  // Notes
+
+  async showNotes(id: number): Promise<any> {
+    let userObj = await this._getByIdOrFail(id);
+
+    userObj = await this.userRepository.findOne({
+      where: {id},
+      relations: ['notes'],
+    });
+
+    return userObj.notes;
+  }
+
+
 }

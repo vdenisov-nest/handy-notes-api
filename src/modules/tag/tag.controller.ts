@@ -22,6 +22,7 @@ export class TagController {
   }
 
   // ==================================================
+  // CRUD
 
   @Post()
   createNewNote(
@@ -31,14 +32,10 @@ export class TagController {
     return this.tagService.createNew(data);
   }
 
-  // ==================================================
-
   @Get()
   showAllNotes() {
     return this.tagService.showAll();
   }
-
-  // ==================================================
 
   @Get(':id')
   findOneNote(
@@ -47,8 +44,6 @@ export class TagController {
     this._logData({ id });
     return this.tagService.findOne(id);
   }
-
-  // ==================================================
 
   @Put(':id')
   updateOneNote(
@@ -59,8 +54,6 @@ export class TagController {
     return this.tagService.updateOne(id, data);
   }
 
-  // ==================================================
-
   @Delete(':id')
   deleteOneNote(
     @Param('id') id: number,
@@ -68,4 +61,7 @@ export class TagController {
     this._logData({ id });
     return this.tagService.deleteOne(id);
   }
+
+  // ==================================================
+
 }

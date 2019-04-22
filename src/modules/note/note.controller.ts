@@ -22,6 +22,7 @@ export class NoteController {
   }
 
   // ==================================================
+  // CRUD
 
   @Post()
   createNewNote(
@@ -31,14 +32,10 @@ export class NoteController {
     return this.noteService.createNew(data);
   }
 
-  // ==================================================
-
   @Get()
   showAllNotes() {
     return this.noteService.showAll();
   }
-
-  // ==================================================
 
   @Get(':id')
   findOneNote(
@@ -47,8 +44,6 @@ export class NoteController {
     this._logData({ id });
     return this.noteService.findOne(id);
   }
-
-  // ==================================================
 
   @Put(':id')
   updateOneNote(
@@ -59,8 +54,6 @@ export class NoteController {
     return this.noteService.updateOne(id, data);
   }
 
-  // ==================================================
-
   @Delete(':id')
   deleteOneNote(
     @Param('id') id: number,
@@ -68,4 +61,7 @@ export class NoteController {
     this._logData({ id });
     return this.noteService.deleteOne(id);
   }
+
+  // ==================================================
+
 }

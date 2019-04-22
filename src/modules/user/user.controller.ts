@@ -22,6 +22,7 @@ export class UserController {
   }
 
   // ==================================================
+  // CRUD
 
   @Post()
   createNewUser(
@@ -31,14 +32,10 @@ export class UserController {
     return this.userService.createNew(data);
   }
 
-  // ==================================================
-
   @Get()
   showAllUsers() {
     return this.userService.showAll();
   }
-
-  // ==================================================
 
   @Get(':id')
   findOneUser(
@@ -46,8 +43,6 @@ export class UserController {
   ) {
     return this.userService.findOne(id);
   }
-
-  // ==================================================
 
   @Put(':id')
   updateOneUser(
@@ -58,8 +53,6 @@ export class UserController {
     return this.userService.updateOne(id, data);
   }
 
-  // ==================================================
-
   @Delete(':id')
   deleteOneUser(
     @Param('id') id: number,
@@ -67,4 +60,15 @@ export class UserController {
     this._logData({ id });
     return this.userService.deleteOne(id);
   }
+
+  // ==================================================
+  // Notes
+
+  @Get(':id/notes')
+  showNotesForUsers(
+    @Param('id') id: number,
+  ) {
+    return this.userService.showNotes(id);
+  }
+
 }

@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber } from 'class-validator';
 
 // tslint:disable:max-classes-per-file
 
@@ -8,6 +8,9 @@ export class CreateNoteDTO {
 
   @IsString()
   text: string;
+
+  @IsNumber()
+  userId: number;
 }
 
 export class UpdateNoteDTO {

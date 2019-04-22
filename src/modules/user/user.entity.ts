@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { NoteEntity } from '../note/note.entity';
 
 @Entity('user')
 export class UserEntity {
@@ -23,4 +24,9 @@ export class UserEntity {
   @Column({ type: 'text', nullable: true })
   birthdate: Date;
   // } PROFILE info
+
+  // relationships {
+  @OneToMany(type => NoteEntity, note => note.author)
+  notes: NoteEntity[];
+  // } relationships
 }
