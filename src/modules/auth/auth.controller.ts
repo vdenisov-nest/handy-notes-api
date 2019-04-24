@@ -2,8 +2,10 @@ import {
   Controller, Logger,
   Post,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 
+import { AuthGuard } from 'src/shared/auth.guard';
 import { AuthService } from './auth.service';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 
@@ -36,6 +38,12 @@ export class AuthController {
   ) {
     this._logData({ data });
     return this.authService.login(data);
+  }
+
+  @Post('test-jwt')
+  @UseGuards(new AuthGuard())
+  testJWT() {
+    return { result: 'token verified !' };
   }
 
 }

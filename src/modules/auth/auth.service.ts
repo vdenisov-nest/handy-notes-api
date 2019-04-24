@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import * as jwt from 'jsonwebtoken';
+
 import { UserEntity } from '../user/user.entity';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 
@@ -40,7 +42,11 @@ export class AuthService {
     const userObj = await this.userRepository.create(data);
     await this.userRepository.save(userObj);
 
-    return userObj;
+    return jwt.sign(
+      { id: userObj.id, email: userObj.email },
+      'default-secret',
+      { expiresIn: '7d' },
+    );
   }
 
   async login(data: LoginUserDTO): Promise<any> {
@@ -56,7 +62,11 @@ export class AuthService {
       throw new BadRequestException('Invalid email or password !!!');
     }
 
-    return userObj;
+    return jwt.sign(
+      { id: userObj.id, email: userObj.email },
+      'default-secret',
+      { expiresIn: '7d' },
+    );
   }
 
 }
