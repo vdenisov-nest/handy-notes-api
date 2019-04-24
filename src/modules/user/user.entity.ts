@@ -16,7 +16,7 @@ export class UserEntity {
 
   // PROFILE info {
   @Column({ type: 'text', nullable: true })
-  username: string;
+  name: string;
 
   @Column({ type: 'text', nullable: true })
   phone: string;
