@@ -22,9 +22,9 @@ export class AuthService {
     const userObj = await this.userRepository.findOne({ where: {email} });
 
     if ( (action === AuthAction.LOGIN) && (typeof userObj === 'undefined') ) {
-      throw new BadRequestException('Email not found !');
+      throw new BadRequestException('Email not found !!!');
     } else if ( (action === AuthAction.REGISTER) && (typeof userObj !== 'undefined') ) {
-      throw new BadRequestException('User already exists !');
+      throw new BadRequestException('User already exists !!!');
     } else {
       return userObj;
     }
@@ -51,6 +51,10 @@ export class AuthService {
     const userObj = await this.userRepository.findOne({
       where: {email},
     });
+    const isPasswordsMatch = await userObj.comparePassword(password);
+    if (!isPasswordsMatch) {
+      throw new BadRequestException('Invalid email or password !!!');
+    }
 
     return userObj;
   }

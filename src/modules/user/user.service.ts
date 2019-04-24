@@ -16,7 +16,7 @@ export class UserService {
   private async _verifyUserId(id: number) {
     const userObj = await this.userRepository.findOne({ where: {id} });
     if (!userObj) {
-      throw new NotFoundException(`Not found record with (id='${id}')`);
+      throw new NotFoundException(`Not found record with (id='${id}') !!!`);
     }
     return userObj;
   }
@@ -24,7 +24,7 @@ export class UserService {
   private async _verifyUserEmail(email: string) {
     const userObj = await this.userRepository.findOne({ where: {email} });
     if (userObj) {
-      throw new BadRequestException('User already exists !');
+      throw new BadRequestException('User already exists !!!');
     }
     return userObj;
   }

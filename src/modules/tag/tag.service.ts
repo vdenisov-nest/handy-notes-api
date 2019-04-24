@@ -16,7 +16,7 @@ export class TagService {
   private async _checkNoteId(id: number) {
     const tagObj = await this.tagRepository.findOne({ where: {id} });
     if (!tagObj) {
-      throw new NotFoundException(`Not found record with (id='${id}')`);
+      throw new NotFoundException(`Not found record with (id='${id}') !!!`);
     }
     return tagObj;
   }

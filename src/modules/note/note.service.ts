@@ -24,7 +24,7 @@ export class NoteService {
   private async _verifyUserId(id: number) {
     const userObj = await this.userRepository.findOne({ where: {id} });
     if (!userObj) {
-      throw new NotFoundException(`Not found record with (id='${id}')`);
+      throw new NotFoundException(`Not found record with (id='${id}') !!!`);
     }
     return userObj;
   }
@@ -32,7 +32,7 @@ export class NoteService {
   private async _checkNoteId(id: number) {
     const noteObj = await this.noteRepository.findOne({ where: {id} });
     if (!noteObj) {
-      throw new NotFoundException(`Not found record with (id='${id}')`);
+      throw new NotFoundException(`Not found record with (id='${id}') !!!`);
     }
     return noteObj;
   }
@@ -40,7 +40,7 @@ export class NoteService {
   private async _checkTagId(id: number) {
     const tagObj = await this.tagRepository.findOne({ where: {id} });
     if (!tagObj) {
-      throw new NotFoundException(`Not found record with (id='${id}')`);
+      throw new NotFoundException(`Not found record with (id='${id}') !!!`);
     }
     return tagObj;
   }
@@ -136,7 +136,7 @@ export class NoteService {
     // validation {
     const sameTags = noteObj.tags.filter(tag => tag.id === tagId);
     if (sameTags.length > 0) {
-      throw new BadRequestException('This tag already attached');
+      throw new BadRequestException('This tag already attached !!!');
     }
     // } validation
 
@@ -173,7 +173,7 @@ export class NoteService {
     // validation {
     const sameTags = noteObj.tags.filter(tag => tag.id === tagId);
     if (sameTags.length === 0) {
-      throw new BadRequestException('Note hasn`t this tag');
+      throw new BadRequestException('Note hasn`t this tag !!!');
     }
     // } validation
 
@@ -203,7 +203,7 @@ export class NoteService {
     // validation {
     const sameLikes = noteObj.likes.filter(user => user.id === userId);
     if (sameLikes.length > 0) {
-      throw new BadRequestException('This user has already added like to this note');
+      throw new BadRequestException('This user has already added like to this note !!!');
     }
     // } validation
 
@@ -240,7 +240,7 @@ export class NoteService {
     // validation {
     const sameLikes = noteObj.likes.filter(user => user.id === userId);
     if (sameLikes.length === 0) {
-      throw new BadRequestException('This user has already removed like from this note');
+      throw new BadRequestException('This user has already removed like from this note !!!');
     }
     // } validation
 
