@@ -14,16 +14,16 @@ import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 
 import * as config from 'config';
+import { IDatabase } from './shared/config.type';
 
-const DB_PARAMS: any = config.get('DATABASE');
-const { type, host, port, username, password, database } = DB_PARAMS;
-const dbURI = `${type}://${username}:${password}@${host}:${port}/${database}`;
+const DATABASE: IDatabase = config.get('database');
 
-// tslint:disable-next-line:no-console
-console.log('\n', '=> DB URI =>', dbURI, '\n');
 @Module({
   imports: [
-    TypeOrmModule.forRoot({ ...DB_PARAMS }),
+    TypeOrmModule.forRoot({
+      ...DATABASE.connection,
+      ...DATABASE.config,
+    }),
 
     AuthModule,
     UserModule,

@@ -12,8 +12,12 @@ import {
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
+import * as config from 'config';
+import { IJwt } from 'src/shared/config.type';
 
 import { NoteEntity } from '../note/note.entity';
+
+const JWT: IJwt = config.get('jwt');
 
 @Entity('user')
 export class UserEntity {
@@ -50,7 +54,7 @@ export class UserEntity {
   // hooks {
   @BeforeInsert()
   async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, JWT.salt);
   }
   // } hooks
 

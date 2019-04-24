@@ -1,6 +1,6 @@
 import {
   Controller, Logger,
-  Post,
+  Post, Get,
   Body,
   UseGuards,
 } from '@nestjs/common';
@@ -40,7 +40,7 @@ export class AuthController {
     return this.authService.login(data);
   }
 
-  @Post('test-jwt')
+  @Get('test-jwt')
   @UseGuards(new AuthGuard())
   testJWT() {
     return { result: 'token verified !' };

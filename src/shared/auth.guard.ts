@@ -2,6 +2,10 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Observable } from 'rxjs';
 
 import * as jwt from 'jsonwebtoken';
+import * as config from 'config';
+import { IJwt } from 'src/shared/config.type';
+
+const JWT: IJwt = config.get('jwt');
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -24,11 +28,8 @@ export class AuthGuard implements CanActivate {
       throw new ForbiddenException('Invalid token');
     }
 
-    // const { secret: jwtSecretString } = config.get('server');
-    const jwtSecretString = 'default-secret';
-
     try {
-      const decoded = jwt.verify(tokenData, jwtSecretString);
+      const decoded = jwt.verify(tokenData, JWT.secret);
       return decoded;
     }
     // tslint:disable-next-line:one-line

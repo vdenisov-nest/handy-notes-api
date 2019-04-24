@@ -4,9 +4,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import * as jwt from 'jsonwebtoken';
+import * as config from 'config';
+import { IJwt } from 'src/shared/config.type';
 
 import { UserEntity } from '../user/user.entity';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
+
+const JWT: IJwt = config.get('jwt');
 
 enum AuthAction {
   REGISTER = 'regiter',
@@ -44,7 +48,7 @@ export class AuthService {
 
     return jwt.sign(
       { id: userObj.id, email: userObj.email },
-      'default-secret',
+      JWT.secret,
       { expiresIn: '7d' },
     );
   }
@@ -64,7 +68,7 @@ export class AuthService {
 
     return jwt.sign(
       { id: userObj.id, email: userObj.email },
-      'default-secret',
+      JWT.secret,
       { expiresIn: '7d' },
     );
   }
