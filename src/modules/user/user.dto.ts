@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 // tslint:disable:max-classes-per-file
 
@@ -19,7 +19,7 @@ export class UpdateUserDTO {
   @IsOptional()
   phone: string;
 
-  @IsDate()
+  @IsString()
   @IsOptional()
   birthdate: Date;
 }

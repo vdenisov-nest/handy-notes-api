@@ -40,7 +40,7 @@ export class UserEntity {
   phone: string;
 
   @Column({ type: 'text', nullable: true })
-  birthdate: Date;
+  birthdate: string;
   // } PROFILE info
 
   // relationships {
