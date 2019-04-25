@@ -1,10 +1,15 @@
 import {
   Controller, Logger,
   Post, Get, Put, Delete,
-  Body, Param, Query, BadRequestException,
+  Body, Param, Query,
+  UseGuards, UsePipes,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
+
+import { JoiValidationPipe } from 'src/shared/joi-validation.pipe';
+import { userCreateSchema, userUpdateSchema } from './user.joi-schema';
 import { CreateUserDTO, UpdateUserDTO } from './user.dto';
 
 @Controller('users')
@@ -25,6 +30,7 @@ export class UserController {
   // CRUD
 
   @Post()
+  @UsePipes(new JoiValidationPipe(userCreateSchema))
   createNewUser(
     @Body() data: CreateUserDTO,
   ) {
@@ -45,6 +51,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @UsePipes(new JoiValidationPipe(userUpdateSchema))
   updateOneUser(
     @Param('id') id: number,
     @Body() data: UpdateUserDTO,
@@ -65,7 +72,7 @@ export class UserController {
   // Notes
 
   @Get(':id/notes')
-  showPersonalNotesForUsers(
+  showNotesForUser(
     @Param('id') id: number,
     @Query('type') type: string,
   ) {
