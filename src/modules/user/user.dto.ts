@@ -13,7 +13,7 @@ export class CreateUserDTO {
 export class UpdateUserDTO {
   @IsString()
   @IsOptional()
-  username: string;
+  name: string;
 
   @IsString()
   @IsOptional()
