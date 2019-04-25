@@ -19,13 +19,14 @@ async function bootstrap() {
   // prefix
   app.setGlobalPrefix('api');
 
-  // pipes
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+  // TODO: uncomment this
+  // // pipes
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //   }),
+  // );
 
   await app.listen(APP.port);
   Logger.log(`Server running on http://localhost:${APP.port}`, 'Bootstrap');
