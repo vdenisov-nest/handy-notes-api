@@ -23,10 +23,12 @@ export class AuthGuard implements CanActivate {
   }
 
   async validateToken(auth: string) {
-    const [ tokenType, tokenData ] = auth.split(' ');
-    if (tokenType !== 'Bearer') {
-      throw new ForbiddenException('Invalid token');
-    }
+    // const [ tokenType, tokenData ] = auth.split(' ');
+    // if (tokenType !== 'Bearer') {
+    //   throw new ForbiddenException('Invalid token');
+    // }
+
+    const tokenData = auth;
 
     try {
       const decoded = jwt.verify(tokenData, JWT.secret);

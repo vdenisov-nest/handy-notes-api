@@ -25,7 +25,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "---------------------------------": "------------------------------",
-    "db:restart": "docker-compose up --build -d service_postgre_db"
+    "db:start": "docker-compose up --build -d service_postgre_db",
+    "db:delete": "docker kill container_postgre_db && docker rm container_postgre_db",
+    "db:restart": "npm run db:delete && npm run db:start"
   },
   "dependencies": {
     "@hapi/joi": "^15.0.0",

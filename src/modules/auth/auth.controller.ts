@@ -48,7 +48,7 @@ export class AuthController {
   @Get('test-jwt')
   @UseGuards(new AuthGuard())
   testJWT() {
-    return { result: 'token verified !' };
+    return { message: 'All is okay ;)' };
   }
 
 }
