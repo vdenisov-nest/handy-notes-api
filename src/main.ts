@@ -3,10 +3,10 @@ import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 
 import * as config from 'config';
-import { IApp } from './shared/config.type';
+import { IConfigApp } from 'src/shared/config-types';
 
 const { NODE_ENV } = process.env;
-const APP: IApp = config.get('app');
+const APP: IConfigApp = config.get('app');
 
 if (NODE_ENV) {
   // tslint:disable-next-line:no-console

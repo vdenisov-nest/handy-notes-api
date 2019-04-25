@@ -22,7 +22,7 @@ export class RegisterUserDTO {
   // @IsDate()
   @IsString()
   @IsOptional()
-  birthdate: Date;
+  birthdate: string;
 }
 
 export class LoginUserDTO {
