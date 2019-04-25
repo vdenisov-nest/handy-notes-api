@@ -43,12 +43,15 @@ export class UserService {
     return userObj;
   }
 
-  async showAll(): Promise<any[]> {
+  async showAll(): Promise<any> {
     const userList = await this.userRepository.find({
       relations: ['personalNotes'],
     });
 
-    return userList;
+    return {
+      data: userList,
+      total: userList.length,
+    };
   }
 
   async findOne(id: number): Promise<any> {
@@ -60,7 +63,9 @@ export class UserService {
       relations: ['personalNotes'],
     });
 
-    return userObj;
+    return {
+      data: userObj,
+    };
   }
 
   async updateOne(id: number, data: UpdateUserDTO): Promise<any> {
@@ -73,7 +78,9 @@ export class UserService {
       relations: ['personalNotes'],
     });
 
-    return userObj;
+    return {
+      data: userObj,
+    };
   }
 
   async deleteOne(id: number): Promise<any> {
@@ -86,7 +93,9 @@ export class UserService {
     });
     await this.userRepository.delete({ id });
 
-    return userObj;
+    return {
+      message: 'user is deleted !',
+    };
   }
 
   // ==================================================

@@ -1,4 +1,5 @@
-import * as BaseJoi from '@hapi/joi';
+// import * as BaseJoi from '@hapi/joi';
+import * as BaseJoi from 'joi';
 import * as JoiDate from 'joi-date-extensions';
 
 const Joi = BaseJoi.extend(JoiDate);

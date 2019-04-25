@@ -30,7 +30,7 @@ export class TagController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(tagCreateSchema))
-  createNewNote(
+  createNewTag(
     @Body() data: CreateTagDTO,
   ) {
     this._logData({ data });
@@ -38,12 +38,12 @@ export class TagController {
   }
 
   @Get()
-  showAllNotes() {
+  showAllTags() {
     return this.tagService.showAll();
   }
 
   @Get(':id')
-  findOneNote(
+  findOneTag(
     @Param('id') id: number,
   ) {
     this._logData({ id });
@@ -51,17 +51,21 @@ export class TagController {
   }
 
   @Put(':id')
-  @UsePipes(new JoiValidationPipe(tagUpdateSchema))
-  updateOneNote(
+  // TODO: pipe try to validate all arguments (@Body and @Param)
+  // * Joi.validate(id) ===> error "value must be an object"
+  // * Joi.validate(data) ===> OK
+  // @UsePipes(new JoiValidationPipe(tagUpdateSchema))
+  updateOneTag(
     @Param('id') id: number,
-    @Body() data: UpdateTagDTO,
+    // @Body() data: UpdateTagDTO,
+    @Body(new JoiValidationPipe(tagUpdateSchema)) data: UpdateTagDTO,
   ) {
     this._logData({ id, data });
     return this.tagService.updateOne(id, data);
   }
 
   @Delete(':id')
-  deleteOneNote(
+  deleteOneTag(
     @Param('id') id: number,
   ) {
     this._logData({ id });

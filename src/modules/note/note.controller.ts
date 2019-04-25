@@ -51,10 +51,14 @@ export class NoteController {
   }
 
   @Put(':id')
-  @UsePipes(new JoiValidationPipe(noteUpdateSchema))
+  // TODO: pipe try to validate all arguments (@Body and @Param)
+  // * Joi.validate(id) ===> error "value must be an object"
+  // * Joi.validate(data) ===> OK
+  // @UsePipes(new JoiValidationPipe(noteUpdateSchema))
   updateOneNote(
     @Param('id') id: number,
-    @Body() data: UpdateNoteDTO,
+    // @Body() data: UpdateNoteDTO,
+    @Body(new JoiValidationPipe(noteUpdateSchema)) data: UpdateNoteDTO,
   ) {
     this._logData({ id, data });
     return this.noteService.updateOne(id, data);
@@ -77,10 +81,8 @@ export class NoteController {
     @Body('tagId') tagId: number,
   ) {
     this._logData({ id });
-    console.log('\n\n *** typeof tagId ===>', typeof tagId);
-    return { ok: true };
-    // const noteId: number = parseInt(id, 10);
-    // return this.noteService.attachTag(noteId, tagId);
+    const noteId: number = parseInt(id, 10);
+    return this.noteService.attachTag(noteId, tagId);
   }
 
   @Get(':id/tags')

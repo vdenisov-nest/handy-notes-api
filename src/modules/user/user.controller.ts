@@ -51,10 +51,14 @@ export class UserController {
   }
 
   @Put(':id')
-  @UsePipes(new JoiValidationPipe(userUpdateSchema))
+  // TODO: pipe try to validate all arguments (@Body and @Param)
+  // * Joi.validate(id) ===> error "value must be an object"
+  // * Joi.validate(data) ===> OK
+  // @UsePipes(new JoiValidationPipe(userUpdateSchema))
   updateOneUser(
     @Param('id') id: number,
-    @Body() data: UpdateUserDTO,
+    // @Body() data: UpdateUserDTO,
+    @Body(new JoiValidationPipe(userUpdateSchema)) data: UpdateUserDTO,
   ) {
     this._logData({ id, data });
     return this.userService.updateOne(id, data);
