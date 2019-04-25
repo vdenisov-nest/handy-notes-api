@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import { CreateTagDTO, UpdateTagDTO } from './tag.dto';
 
-import { TagEntity } from './tag.entity';
+import { TagEntity } from 'src/shared/models';
 
 @Injectable()
 export class TagService {

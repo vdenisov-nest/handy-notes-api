@@ -1,6 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { TagEntity } from '../tag/tag.entity';
+import {
+  Entity,
+
+  PrimaryGeneratedColumn,
+  Column,
+
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+
+import { UserEntity } from './user.entity';
+import { TagEntity } from './tag.entity';
 
 @Entity('note')
 export class NoteEntity {

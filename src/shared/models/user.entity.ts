@@ -8,14 +8,13 @@ import {
   ManyToMany,
 
   BeforeInsert,
-  AfterLoad,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
 import * as config from 'config';
 import { IConfigJwt } from 'src/shared/config-types';
 
-import { NoteEntity } from '../note/note.entity';
+import { NoteEntity } from './note.entity';
 
 const JWT: IConfigJwt = config.get('jwt');
 

@@ -7,7 +7,7 @@ import * as jwt from 'jsonwebtoken';
 import * as config from 'config';
 import { IConfigJwt } from 'src/shared/config-types';
 
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from 'src/shared/models';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 
 const JWT: IConfigJwt = config.get('jwt');
