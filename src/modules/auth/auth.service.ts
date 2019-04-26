@@ -54,6 +54,10 @@ export class AuthService {
 
     return {
       message: 'user is registered !',
+      data: {
+        user: userObj,
+        token,
+      },
     };
   }
 
@@ -78,7 +82,10 @@ export class AuthService {
 
     return {
       message: 'user is logged in !',
-      data: { token },
+      data: {
+        user: userObj,
+        token,
+      },
     };
   }
 

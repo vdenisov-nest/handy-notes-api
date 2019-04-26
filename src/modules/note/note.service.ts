@@ -66,7 +66,9 @@ export class NoteService {
 
     return {
       message: 'note is created !',
-      data: noteObj,
+      data: {
+        note: noteObj,
+      },
     };
   }
 
@@ -77,7 +79,7 @@ export class NoteService {
 
     return {
       data: noteList,
-      total: noteList,
+      total: noteList.length,
     };
   }
 

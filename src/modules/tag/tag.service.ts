@@ -42,7 +42,9 @@ export class TagService {
 
     return {
       message: 'tag is created !',
-      data: tagObj,
+      data: {
+        tag: tagObj,
+      },
     }
   }
 

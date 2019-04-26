@@ -40,7 +40,12 @@ export class UserService {
     const userObj = await this.userRepository.create(data);
     await this.userRepository.save(userObj);
 
-    return userObj;
+    return {
+      message: 'user is created !',
+      data: {
+        user: userObj,
+      },
+    };
   }
 
   async showAll(): Promise<any> {
