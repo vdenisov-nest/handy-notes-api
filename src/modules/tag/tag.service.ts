@@ -40,15 +40,21 @@ export class TagService {
     const tagObj = await this.tagRepository.create(data);
     await this.tagRepository.save(tagObj);
 
-    return tagObj;
+    return {
+      message: 'tag is created !',
+      data: tagObj,
+    }
   }
 
-  async showAll(): Promise<any[]> {
-    const tagList = this.tagRepository.find({
+  async showAll(): Promise<any> {
+    const tagList = await this.tagRepository.find({
       relations: ['notes'],
     });
 
-    return tagList;
+    return {
+      data: tagList,
+      total: tagList.length,
+    };
   }
 
   async findOne(id: number): Promise<any> {
@@ -60,7 +66,9 @@ export class TagService {
       relations: ['notes'],
     });
 
-    return tagObj;
+    return {
+      data: tagObj,
+    };
   }
 
   async updateOne(id: number, data: UpdateTagDTO): Promise<any> {
@@ -75,7 +83,10 @@ export class TagService {
       relations: ['notes'],
     });
 
-    return tagObj;
+    return {
+      message: 'tag is updated !',
+      data: tagObj,
+    };
   }
 
   async deleteOne(id: number): Promise<any> {
@@ -88,7 +99,10 @@ export class TagService {
     });
     await this.tagRepository.delete({ id });
 
-    return tagObj;
+    return {
+      message: 'tag is deleted !',
+      data: tagObj,
+    };
   }
 
   // ==================================================
