@@ -96,6 +96,7 @@ export class UserService {
 
     return {
       message: 'user is deleted !',
+      data: userObj,
     };
   }
 

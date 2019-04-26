@@ -1,6 +1,6 @@
 import {
   Controller, Logger,
-  Post, Get, Put, Delete,
+  Post, Get, Put, Patch, Delete,
   Body, Param,
   UseGuards, UsePipes,
 } from '@nestjs/common';
@@ -50,7 +50,7 @@ export class NoteController {
     return this.noteService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   // TODO: pipe try to validate all arguments (@Body and @Param)
   // * Joi.validate(id) ===> error "value must be an object"
   // * Joi.validate(data) ===> OK
