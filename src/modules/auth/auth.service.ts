@@ -46,11 +46,19 @@ export class AuthService {
     const userObj = await this.userRepository.create(data);
     await this.userRepository.save(userObj);
 
-    return jwt.sign(
+    const token = jwt.sign(
       { id: userObj.id, email: userObj.email },
       JWT.secret,
       { expiresIn: '7d' },
     );
+
+    return {
+      message: 'user is registered !',
+      data: {
+        user: userObj,
+        token,
+      },
+    };
   }
 
   async login(data: LoginUserDTO): Promise<any> {
@@ -66,11 +74,19 @@ export class AuthService {
       throw new BadRequestException('Invalid email or password !!!');
     }
 
-    return jwt.sign(
+    const token = jwt.sign(
       { id: userObj.id, email: userObj.email },
       JWT.secret,
       { expiresIn: '7d' },
     );
+
+    return {
+      message: 'user is logged in !',
+      data: {
+        user: userObj,
+        token,
+      },
+    };
   }
 
 }

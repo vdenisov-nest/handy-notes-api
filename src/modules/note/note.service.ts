@@ -64,15 +64,23 @@ export class NoteService {
     });
     await this.noteRepository.save(noteObj);
 
-    return noteObj;
+    return {
+      message: 'note is created !',
+      data: {
+        note: noteObj,
+      },
+    };
   }
 
-  async showAll(): Promise<any[]> {
-    const noteList = this.noteRepository.find({
+  async showAll(): Promise<any> {
+    const noteList = await this.noteRepository.find({
       relations: ['author', 'tags', 'likes'],
     });
 
-    return noteList;
+    return {
+      data: noteList,
+      total: noteList.length,
+    };
   }
 
   async findOne(id: number): Promise<any> {
@@ -84,7 +92,9 @@ export class NoteService {
       relations: ['author', 'tags', 'likes'],
     });
 
-    return noteObj;
+    return {
+      data: noteObj,
+    };
   }
 
   async updateOne(id: number, data: UpdateNoteDTO): Promise<any> {
@@ -97,7 +107,10 @@ export class NoteService {
       relations: ['author', 'tags', 'likes'],
     });
 
-    return noteObj;
+    return {
+      message: 'note is updated !',
+      data: noteObj,
+    };
   }
 
   async deleteOne(id: number): Promise<any> {
@@ -110,7 +123,10 @@ export class NoteService {
     });
     await this.noteRepository.delete({ id });
 
-    return noteObj;
+    return {
+      message: 'note is deleted !',
+      data: noteObj,
+    };
   }
 
   // ==================================================

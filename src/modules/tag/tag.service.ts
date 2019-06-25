@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -13,7 +13,15 @@ export class TagService {
     private tagRepository: Repository<TagEntity>,
   ) {}
 
-  private async _checkNoteId(id: number) {
+  private async _verifyTagValue(value: string) {
+    const tagObj = await this.tagRepository.findOne({ where: {value} });
+    if (tagObj) {
+      throw new BadRequestException('Tag already exists !!!');
+    }
+    return tagObj;
+  }
+
+  private async _checkTagId(id: number) {
     const tagObj = await this.tagRepository.findOne({ where: {id} });
     if (!tagObj) {
       throw new NotFoundException(`Not found record with (id='${id}') !!!`);
@@ -25,35 +33,51 @@ export class TagService {
   // CRUD
 
   async createNew(data: CreateTagDTO): Promise<any> {
+    const { value } = data;
+    // validation
+    await this._verifyTagValue(value);
+
     const tagObj = await this.tagRepository.create(data);
     await this.tagRepository.save(tagObj);
 
-    return tagObj;
+    return {
+      message: 'tag is created !',
+      data: {
+        tag: tagObj,
+      },
+    }
   }
 
-  async showAll(): Promise<any[]> {
-    const tagList = this.tagRepository.find({
+  async showAll(): Promise<any> {
+    const tagList = await this.tagRepository.find({
       relations: ['notes'],
     });
 
-    return tagList;
+    return {
+      data: tagList,
+      total: tagList.length,
+    };
   }
 
   async findOne(id: number): Promise<any> {
     // validation
-    await this._checkNoteId(id);
+    await this._checkTagId(id);
 
     const tagObj = await this.tagRepository.findOne({
       where: {id},
       relations: ['notes'],
     });
 
-    return tagObj;
+    return {
+      data: tagObj,
+    };
   }
 
   async updateOne(id: number, data: UpdateTagDTO): Promise<any> {
+    const { value } = data;
     // validation
-    await this._checkNoteId(id);
+    await this._checkTagId(id);
+    await this._verifyTagValue(value);
 
     await this.tagRepository.update({id}, data);
     const tagObj = await this.tagRepository.findOne({
@@ -61,11 +85,15 @@ export class TagService {
       relations: ['notes'],
     });
 
-    return tagObj;
+    return {
+      message: 'tag is updated !',
+      data: tagObj,
+    };
   }
 
   async deleteOne(id: number): Promise<any> {
-    await this._checkNoteId(id);
+    // validation
+    await this._checkTagId(id);
 
     const tagObj = await this.tagRepository.findOne({
       where: {id},
@@ -73,7 +101,10 @@ export class TagService {
     });
     await this.tagRepository.delete({ id });
 
-    return tagObj;
+    return {
+      message: 'tag is deleted !',
+      data: tagObj,
+    };
   }
 
   // ==================================================

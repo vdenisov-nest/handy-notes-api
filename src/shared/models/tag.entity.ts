@@ -5,7 +5,6 @@ import {
   Column,
 
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
 
 import { NoteEntity } from './note.entity';
@@ -15,7 +14,7 @@ export class TagEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column('text')
+  @Column({ type: 'text', unique: true })
   value: string;
 
   // relationships {

@@ -1,6 +1,6 @@
 import {
   Controller, Logger,
-  Post, Get, Put, Delete,
+  Post, Get, Put, Patch, Delete,
   Body, Param,
   UseGuards, UsePipes,
 } from '@nestjs/common';
@@ -30,7 +30,7 @@ export class TagController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(tagCreateSchema))
-  createNewNote(
+  createNewTag(
     @Body() data: CreateTagDTO,
   ) {
     this._logData({ data });
@@ -38,30 +38,34 @@ export class TagController {
   }
 
   @Get()
-  showAllNotes() {
+  showAllTags() {
     return this.tagService.showAll();
   }
 
   @Get(':id')
-  findOneNote(
+  findOneTag(
     @Param('id') id: number,
   ) {
     this._logData({ id });
     return this.tagService.findOne(id);
   }
 
-  @Put(':id')
-  @UsePipes(new JoiValidationPipe(tagUpdateSchema))
-  updateOneNote(
+  @Patch(':id')
+  // TODO: pipe try to validate all arguments (@Body and @Param)
+  // * Joi.validate(id) ===> error "value must be an object"
+  // * Joi.validate(data) ===> OK
+  // @UsePipes(new JoiValidationPipe(tagUpdateSchema))
+  updateOneTag(
     @Param('id') id: number,
-    @Body() data: UpdateTagDTO,
+    // @Body() data: UpdateTagDTO,
+    @Body(new JoiValidationPipe(tagUpdateSchema)) data: UpdateTagDTO,
   ) {
     this._logData({ id, data });
     return this.tagService.updateOne(id, data);
   }
 
   @Delete(':id')
-  deleteOneNote(
+  deleteOneTag(
     @Param('id') id: number,
   ) {
     this._logData({ id });

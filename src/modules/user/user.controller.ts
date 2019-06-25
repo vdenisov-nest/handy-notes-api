@@ -1,6 +1,6 @@
 import {
   Controller, Logger,
-  Post, Get, Put, Delete,
+  Post, Get, Put, Patch, Delete,
   Body, Param, Query,
   UseGuards, UsePipes,
   BadRequestException,
@@ -50,11 +50,15 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
-  @Put(':id')
-  @UsePipes(new JoiValidationPipe(userUpdateSchema))
+  @Patch(':id')
+  // TODO: pipe try to validate all arguments (@Body and @Param)
+  // * Joi.validate(id) ===> error "value must be an object"
+  // * Joi.validate(data) ===> OK
+  // @UsePipes(new JoiValidationPipe(userUpdateSchema))
   updateOneUser(
     @Param('id') id: number,
-    @Body() data: UpdateUserDTO,
+    // @Body() data: UpdateUserDTO,
+    @Body(new JoiValidationPipe(userUpdateSchema)) data: UpdateUserDTO,
   ) {
     this._logData({ id, data });
     return this.userService.updateOne(id, data);
