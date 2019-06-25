@@ -14,9 +14,9 @@ import { HttpExceptionFilter } from './shared/http-exception.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 
 import * as config from 'config';
-import { IDatabase } from './shared/config.type';
+import { IConfigDatabase } from 'src/shared/config-types';
 
-const DATABASE: IDatabase = config.get('database');
+const DATABASE: IConfigDatabase = config.get('database');
 
 @Module({
   imports: [

@@ -2,9 +2,13 @@ import {
   Controller, Logger,
   Post, Get, Put, Delete,
   Body, Param,
+  UseGuards, UsePipes,
 } from '@nestjs/common';
 
 import { NoteService } from './note.service';
+
+import { JoiValidationPipe } from 'src/shared/joi-validation.pipe';
+import { noteCreateSchema, noteUpdateSchema } from './note.joi-schema';
 import { CreateNoteDTO, UpdateNoteDTO } from './note.dto';
 
 @Controller('notes')
@@ -25,6 +29,7 @@ export class NoteController {
   // CRUD
 
   @Post()
+  @UsePipes(new JoiValidationPipe(noteCreateSchema))
   createNewNote(
     @Body() data: CreateNoteDTO,
   ) {
@@ -46,6 +51,7 @@ export class NoteController {
   }
 
   @Put(':id')
+  @UsePipes(new JoiValidationPipe(noteUpdateSchema))
   updateOneNote(
     @Param('id') id: number,
     @Body() data: UpdateNoteDTO,
@@ -71,8 +77,10 @@ export class NoteController {
     @Body('tagId') tagId: number,
   ) {
     this._logData({ id });
-    const noteId: number = parseInt(id, 10);
-    return this.noteService.attachTag(noteId, tagId);
+    console.log('\n\n *** typeof tagId ===>', typeof tagId);
+    return { ok: true };
+    // const noteId: number = parseInt(id, 10);
+    // return this.noteService.attachTag(noteId, tagId);
   }
 
   @Get(':id/tags')

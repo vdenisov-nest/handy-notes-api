@@ -1,35 +1,33 @@
-import { IsString, IsDate, IsOptional, IsPhoneNumber, IsEmail } from 'class-validator';
+import { IsString, IsOptional, IsDate, IsPhoneNumber, IsEmail } from 'class-validator';
 
 // tslint:disable:max-classes-per-file
 
 export class RegisterUserDTO {
-  // AUTH credetials {
-  // @IsString()
-  @IsEmail()
+  // @IsEmail()
+  @IsString()
   email: string;
 
   @IsString()
   password: string;
-  // } AUTH credetials
 
-  // PROFILE info {
   @IsString()
   @IsOptional()
   name: string;
 
-  // @IsString()
-  @IsPhoneNumber('RU')
+  // @IsPhoneNumber('RU')
+  @IsString()
   @IsOptional()
   phone: string;
 
-  @IsDate()
+  // @IsDate()
+  @IsString()
   @IsOptional()
-  birthdate: Date;
-  // } PROFILE info
+  birthdate: string;
 }
 
 export class LoginUserDTO {
-  @IsEmail()
+  // @IsEmail()
+  @IsString()
   email: string;
 
   @IsString()

@@ -4,9 +4,7 @@ import { Repository } from 'typeorm';
 
 import { CreateNoteDTO, UpdateNoteDTO } from './note.dto';
 
-import { UserEntity } from '../user/user.entity';
-import { NoteEntity } from './note.entity';
-import { TagEntity } from '../tag/tag.entity';
+import { UserEntity, NoteEntity, TagEntity } from 'src/shared/models';
 
 @Injectable()
 export class NoteService {

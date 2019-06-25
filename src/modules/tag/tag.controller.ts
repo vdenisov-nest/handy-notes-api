@@ -2,9 +2,13 @@ import {
   Controller, Logger,
   Post, Get, Put, Delete,
   Body, Param,
+  UseGuards, UsePipes,
 } from '@nestjs/common';
 
 import { TagService } from './tag.service';
+
+import { JoiValidationPipe } from 'src/shared/joi-validation.pipe';
+import { tagCreateSchema, tagUpdateSchema } from './tag.joi-schema';
 import { CreateTagDTO, UpdateTagDTO } from './tag.dto';
 
 @Controller('tags')
@@ -25,6 +29,7 @@ export class TagController {
   // CRUD
 
   @Post()
+  @UsePipes(new JoiValidationPipe(tagCreateSchema))
   createNewNote(
     @Body() data: CreateTagDTO,
   ) {
@@ -46,6 +51,7 @@ export class TagController {
   }
 
   @Put(':id')
+  @UsePipes(new JoiValidationPipe(tagUpdateSchema))
   updateOneNote(
     @Param('id') id: number,
     @Body() data: UpdateTagDTO,

@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 
 import * as jwt from 'jsonwebtoken';
 import * as config from 'config';
-import { IJwt } from 'src/shared/config.type';
+import { IConfigJwt } from 'src/shared/config-types';
 
-const JWT: IJwt = config.get('jwt');
+const JWT: IConfigJwt = config.get('jwt');
 
 @Injectable()
 export class AuthGuard implements CanActivate {

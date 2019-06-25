@@ -5,12 +5,12 @@ import { Repository } from 'typeorm';
 
 import * as jwt from 'jsonwebtoken';
 import * as config from 'config';
-import { IJwt } from 'src/shared/config.type';
+import { IConfigJwt } from 'src/shared/config-types';
 
-import { UserEntity } from '../user/user.entity';
+import { UserEntity } from 'src/shared/models';
 import { RegisterUserDTO, LoginUserDTO } from './auth.dto';
 
-const JWT: IJwt = config.get('jwt');
+const JWT: IConfigJwt = config.get('jwt');
 
 enum AuthAction {
   REGISTER = 'regiter',

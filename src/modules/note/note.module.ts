@@ -4,9 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NoteController } from './note.controller';
 import { NoteService } from './note.service';
 
-import { NoteEntity } from './note.entity';
-import { UserEntity } from '../user/user.entity';
-import { TagEntity } from '../tag/tag.entity';
+import { UserEntity, NoteEntity, TagEntity } from 'src/shared/models';
 
 @Module({
   imports: [

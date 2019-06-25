@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
 
-import { TagEntity } from './tag.entity';
+import { TagEntity } from 'src/shared/models';
 
 @Module({
   imports: [

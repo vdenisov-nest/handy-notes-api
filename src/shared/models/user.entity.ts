@@ -8,16 +8,15 @@ import {
   ManyToMany,
 
   BeforeInsert,
-  AfterLoad,
 } from 'typeorm';
 
 import * as bcrypt from 'bcryptjs';
 import * as config from 'config';
-import { IJwt } from 'src/shared/config.type';
+import { IConfigJwt } from 'src/shared/config-types';
 
-import { NoteEntity } from '../note/note.entity';
+import { NoteEntity } from './note.entity';
 
-const JWT: IJwt = config.get('jwt');
+const JWT: IConfigJwt = config.get('jwt');
 
 @Entity('user')
 export class UserEntity {
@@ -40,7 +39,7 @@ export class UserEntity {
   phone: string;
 
   @Column({ type: 'text', nullable: true })
-  birthdate: Date;
+  birthdate: string;
   // } PROFILE info
 
   // relationships {
