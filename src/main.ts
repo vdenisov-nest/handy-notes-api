@@ -1,11 +1,12 @@
-import * as config from 'config';
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 
+import * as config from 'config';
+import { IConfigApp } from 'src/shared/config-types';
+
 const { NODE_ENV } = process.env;
-const { PORT } = config.get('SERVER');
+const APP: IConfigApp = config.get('app');
 
 if (NODE_ENV) {
   // tslint:disable-next-line:no-console
@@ -18,15 +19,16 @@ async function bootstrap() {
   // prefix
   app.setGlobalPrefix('api');
 
-  // pipes
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  );
+  // TODO: uncomment this
+  // // pipes
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     forbidNonWhitelisted: true,
+  //   }),
+  // );
 
-  await app.listen(PORT);
-  Logger.log(`Server running on http://localhost:${PORT}`, 'Bootstrap');
+  await app.listen(APP.port);
+  Logger.log(`Server running on http://localhost:${APP.port}`, 'Bootstrap');
 }
 bootstrap();
